@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('mangas', function (Blueprint $table) {
             $table->string('title');
-            $table->text('body');
+            $table->string('chapters');
+            $table->text('image')->nullable();
             $table->timestamps();
         });
     }
