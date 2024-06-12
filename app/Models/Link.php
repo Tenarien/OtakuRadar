@@ -5,21 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-
-class Manga extends Model
+class Link extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'body',
+      'chapter_id',
+      'url',
     ];
 
-    public function chapters(): HasMany
+    public function chapter(): BelongsTo
     {
-        return $this->hasMany(Chapter::class);
+        return $this->belongsTo(Chapter::class);
     }
-
 }
