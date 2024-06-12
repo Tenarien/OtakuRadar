@@ -11,7 +11,7 @@
 <body class="bg-slate-100 text-slate-900">
 <header class='flex border-b py-4 px-4 sm:px-10 bg-white font-[sans-serif] min-h-[70px] tracking-wide relative z-50'>
     <div class='flex flex-wrap items-center gap-5 w-full'>
-        <a href="javascript:void(0)"><img src="{{ asset('svg/logo.svg') }}" alt="logo" class='w-36' />
+        <a href="{{ route('mangas.index') }}"><img src="{{ asset('svg/logo.svg') }}" alt="logo" class='w-36' />
         </a>
 
         <div id="collapseMenu"
@@ -29,11 +29,11 @@
             <ul
                 class='lg:flex lg:ml-14 lg:gap-x-5 max-lg:space-y-3 max-lg:fixed max-lg:bg-white max-lg:w-1/2 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:p-6 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50'>
                 <li class='mb-6 hidden max-lg:block'>
-                    <a href="javascript:void(0)"><img src="{{ asset('svg/logo.svg') }}" alt="logo" class='w-36' />
+                    <a href="{{ route('mangas.index') }}"><img src="{{ asset('svg/logo.svg') }}" alt="logo" class='w-36' />
                     </a>
                 </li>
                 <li class='max-lg:border-b max-lg:py-3 px-3'>
-                    <a href='javascript:void(0)'
+                    <a href='{{ route('mangas.index') }}'
                        class='lg:hover:text-[#007bff] text-[#007bff] block font-semibold text-[15px]'>Home</a>
                 </li>
                 <li class='max-lg:border-b max-lg:py-3 px-3'><a href='javascript:void(0)'
@@ -72,9 +72,22 @@
                 </svg>
             </div>
         </div>
+        @guest
+            <div class='max-lg:border-b max-lg:py-3 px-3'>
+                <a href="{{ route('login') }}" class='cursor-pointer lg:hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'>Log in</a>
+            </div>
+        @endguest
+        @auth
+            <div class='max-lg:border-b max-lg:py-3 px-3'>
+                <form action="{{ route('logout') }}" method="post">
+                    @csrf
+                    <button class='cursor-pointer lg:hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'>Logout</button>
+                </form>
+            </div>
+        @endauth
     </div>
 </header>
-    <main class="py-8 px-60 mx-auto">
+    <main class="py-8 mx-52">
         {{ $slot }}
     </main>
 <script>
