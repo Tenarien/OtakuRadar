@@ -15,6 +15,11 @@ class Link extends Model
       'url',
     ];
 
+    public function manga()
+    {
+        return $this->belongsTo(Manga::class, 'chapter_id');
+    }
+
     public function chapter(): BelongsTo
     {
         return $this->belongsTo(Chapter::class);

@@ -14,12 +14,33 @@ class Manga extends Model
 
     protected $fillable = [
         'title',
-        'body',
+        'image',
+        'url',
     ];
 
     public function chapters(): HasMany
     {
         return $this->hasMany(Chapter::class);
+    }
+
+    public function follow(User $user)
+    {
+        $this->followers()->attach($user);
+    }
+
+    public function unfollow(User $user)
+    {
+        $this->followers()->detach($user);
+    }
+
+    public function isFollowedBy(User $user)
+    {
+        return $this->followers()->where('user_id', $user->id)->exists();
+    }
+
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'manga_user')->withTimestamps();
     }
 
 }

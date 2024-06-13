@@ -45,4 +45,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function followedMangas()
+    {
+        return $this->belongsToMany(Manga::class, 'manga_user')->withTimestamps();
+    }
 }
