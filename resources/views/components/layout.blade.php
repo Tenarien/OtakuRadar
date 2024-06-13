@@ -34,7 +34,7 @@
                 </li>
                 <li class='max-lg:border-b max-lg:py-3 px-3'>
                     <a href='{{ route('mangas.index') }}'
-                       class='lg:hover:text-[#007bff] text-[#007bff] block font-semibold text-[15px]'>Home</a>
+                       class='lg:hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'>Home</a>
                 </li>
                 <li class='max-lg:border-b max-lg:py-3 px-3'><a href='javascript:void(0)'
                                                                 class='lg:hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]'>Bookmarks</a>
