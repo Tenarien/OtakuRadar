@@ -7,9 +7,13 @@ use App\Http\Controllers\MangaController;
 Route::get('/', [MangaController::class, 'index']);
 
 Route::resource('mangas', MangaController::class);
+Route::resource('chapters', MangaController::class);
 
 Route::middleware('auth')->group(function () {
-   Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    Route::post('/mangas/{manga}/follow', [MangaController::class, 'follow'])->name('mangas.follow');
+    Route::post('/mangas/{manga}/unfollow', [MangaController::class, 'unfollow'])->name('mangas.unfollow');
 });
 
 Route::middleware('guest')->group(function () {
