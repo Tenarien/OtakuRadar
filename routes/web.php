@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BookmarkController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MangaController;
 
@@ -14,6 +15,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/mangas/{manga}/follow', [MangaController::class, 'follow'])->name('mangas.follow');
     Route::post('/mangas/{manga}/unfollow', [MangaController::class, 'unfollow'])->name('mangas.unfollow');
+
+    Route::get('/bookmarks', [BookmarkController::class, 'bookmark'])->name('users.bookmark');
 });
 
 Route::middleware('guest')->group(function () {
