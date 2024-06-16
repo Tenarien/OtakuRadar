@@ -67,6 +67,16 @@
     .btn {
         @apply block w-full bg-slate-800 text-white rounded-md p-2 active:bg-indigo-600;
     }
+    .btn-secondary {
+        @apply block bg-slate-800 text-white rounded-md p-2 active:bg-indigo-600;
+    }
+    .shadow-darker-xl {
+        @apply shadow-xl; box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.15), 10px 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    .zoom-darken:hover {
+        @apply transition-transform duration-300 ease-in-out transform scale-105;
+        filter: brightness(0.85);
+    }
     .error {
         @apply text-sm text-red-500;
     }
