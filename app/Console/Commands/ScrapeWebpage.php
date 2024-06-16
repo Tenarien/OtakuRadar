@@ -39,45 +39,71 @@ class ScrapeWebpage extends Command
     {
         $client = new Client();
 
+        $this->info('Starting to scrape data from AsuraComic...');
+
         $response = $client->get('https://asuracomic.net/');
         $html = (string) $response->getBody();
         $crawler = new Crawler($html);
 
+        $mangaNodes = $crawler->filter('.listupd .utao')->slice(0, 15);
 
-        $crawler->filter('.listupd .utao')->each(function ($node) use ($client) {
+        $mangaNodes->each(function ($node) use ($client) {
             $title = $node->filter('a.series')->attr('title');
             $image = $node->filter('a.series img')->attr('src');
             $url = $node->filter('a.series')->attr('href');
 
+            $this->info("Processing manga: $title");
 
             $manga = Manga::updateOrCreate(
                 ['title' => $title],
                 ['image' => $image, 'url' => $url]
             );
 
-            usleep(500000);
+            usleep(2000000);
+
+            $this->info("Fetching details for manga: $title from URL: $url");
 
             $mangaPageResponse = $client->get($url);
             $mangaPageHtml = (string) $mangaPageResponse->getBody();
             $mangaPageCrawler = new Crawler($mangaPageHtml);
 
+            $isMangaNew = $manga->wasRecentlyCreated;
+            $chapterNodes = $mangaPageCrawler->filter('.eplister ul.clstyle li');
 
-            $mangaPageCrawler->filter('.eplister ul.clstyle li')->each(function ($chapterNode) use ($manga) {
+            $chapterNodesArray = iterator_to_array($chapterNodes->getIterator());
+            $reversedChapterNodes = array_reverse($chapterNodesArray);
+
+            if (!$isMangaNew) {
+                $reversedChapterNodes = array_slice($reversedChapterNodes, 0, 5);
+            }
+
+            foreach ($reversedChapterNodes as $chapterNode) {
+                $chapterNode = new Crawler($chapterNode);
                 $chapterNumber = trim($chapterNode->filter('.chapternum')->text());
                 $chapterLink = $chapterNode->filter('a')->attr('href');
 
+                $this->info("Processing chapter: $chapterNumber for manga: {$manga->title}");
 
-                $chapter = Chapter::updateOrCreate(
+                $chapter = Chapter::firstOrNew(
                     ['chapter_number' => $chapterNumber, 'manga_id' => $manga->id]
                 );
 
+                if (!$chapter->exists) {
+                    $chapter->save();
 
-                Link::updateOrCreate(
-                    ['chapter_id' => $chapter->id, 'url' => $chapterLink]
-                );
+                    Link::updateOrCreate(
+                        ['chapter_id' => $chapter->id, 'url' => $chapterLink]
+                    );
 
-                usleep(200000);
-            });
+                    $this->info("Saved chapter link: $chapterLink");
+                } else {
+                    $this->info("Chapter $chapterNumber already exists. Skipping update.");
+                }
+
+                usleep(150000);
+
+            }
+            $this->info("Finished processing manga: $title");
         });
 
         $this->info('Webpage data scraped and saved successfully!');
