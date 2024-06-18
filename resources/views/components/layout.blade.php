@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <title>{{ env('APP_NAME') }}</title>
     @vite(['resources/js/app.js', 'resources/css/app.css'])
+
 </head>
-<body class="bg-slate-100 text-slate-900">
-<header id="header" class="flex items-center justify-between px-4 py-4 bg-white border-b min-h-[70px] fixed top-0 inset-x-0 z-50">
+<body class="bg-slate-200 text-slate-900">
+<header id="header" class="flex items-center justify-between px-4 py-4 bg-slate-100 border-b min-h-[70px] fixed top-0 inset-x-0 z-50">
     <a id="logo" href="{{ route('mangas.index') }}" class="w-36 transition">
         <img src="{{ asset('svg/logo.svg') }}" alt="logo">
     </a>
-
+    <input type="hidden" id="userId" value="{{ Auth::user()->id ?? '' }}">
     <!-- Mobile Navigation -->
         <nav id="collapseMenu" class="hidden card fixed inset-y-0 left-0 bg-black z-50 w-1/2 p-6 lg:hidden overflow-auto bg-opacity-70">
             <button id="toggleClose" class="hidden"></button>
@@ -75,16 +78,20 @@
                 <path d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"></path>
             </svg>
         </button>
+        <div>
+            <x-search />
+        </div>
     </div>
 
 
     <!-- Search Bar for larger screens -->
     <div id="searchBarContainer" class="hidden lg:flex gap-6 w-full lg:w-auto lg:ml-4 items-center">
         <div class="flex px-4 py-2 bg-gray-100 rounded focus-within:outline-blue-500">
-            <input type="text" id="searchInput" placeholder="Search something..." class="w-full text-sm bg-transparent outline-none">
+            <input type="text" class="searchInput w-full text-sm bg-transparent outline-none" placeholder="Search for something...">
             <svg class="w-5 h-5 fill-gray-400 cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904">
                 <path d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"></path>
             </svg>
+            <div class="searchResults absolute rounded-md shadow-darker-xl top-32 w-1/4 ml-auto mr-8 left-0 right-0 bg-slate-50 border mt-1 opacity-0 max-h-0 overflow-hidden transition-all duration-500 ease-in-out"></div>
         </div>
         @guest
             <a href="{{ route('login') }}" class="text-white shadow-darker-xl rounded-full py-2 px-6 bg-slate-600 hover:bg-slate-500 shadow-md hover:shadow-lg transition-transform">Log in</a>
@@ -98,12 +105,13 @@
     </div>
 
     <!-- Hidden Mobile Search Bar -->
-    <div id="mobileSearchBar" class="hidden shadow-darker-xl rounded-full fixed inset-x-0 mx-4 mt-48 bg-white z-50">
-        <div class="flex shadow-lg px-4 gap-4 py-2 bg-gray-100 rounded-full focus-within:outline-blue-500">
-            <input type="text" placeholder="Search something..." class="w-full text-sm bg-transparent outline-none">
+    <div id="mobileSearchBar" class=" hidden shadow-darker-xl rounded-full fixed inset-x-0 mx-4 mt-48 bg-white z-50">
+        <div class="flex shadow-lg px-4 gap-4 py-2 bg-gray-100 rounded-full focus-within:outline-blue-500 relative">
+            <input type="text" placeholder="Search something..." class="searchInput w-full text-sm bg-transparent outline-none">
             <svg class="w-5 h-5 fill-gray-400 cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904">
                 <path d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"></path>
             </svg>
+            <div class="searchResults absolute rounded-xl shadow-darker-xl top-9 left-0 right-0 bg-slate-50 border mt-1 opacity-0 max-h-0 overflow-hidden transition-all duration-500 ease-in-out"></div>
         </div>
     </div>
 </header>
