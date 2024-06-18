@@ -69,12 +69,15 @@ class ScrapeWebpage extends Command
 
             $isMangaNew = $manga->wasRecentlyCreated;
             $chapterNodes = $mangaPageCrawler->filter('.eplister ul.clstyle li');
+            $slicedChapterNodes = $mangaPageCrawler->filter('.eplister ul.clstyle li')->slice(0, 5);
 
             $chapterNodesArray = iterator_to_array($chapterNodes->getIterator());
+            $slicedChapterNodesArray = iterator_to_array($slicedChapterNodes->getIterator());
             $reversedChapterNodes = array_reverse($chapterNodesArray);
+            $reversedSlicedChapterNodes = array_reverse($slicedChapterNodesArray);
 
             if (!$isMangaNew) {
-                $reversedChapterNodes = array_slice($reversedChapterNodes, 0, 5);
+                $reversedChapterNodes = array_slice($reversedSlicedChapterNodes, 0, 5);
             }
 
             foreach ($reversedChapterNodes as $chapterNode) {
