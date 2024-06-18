@@ -2,16 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChapterView;
 use Illuminate\Http\Request;
 use App\Models\Manga;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class MangaController extends Controller
 {
     public function index()
     {
-        $mangas = Manga::latest()->paginate(10);
+            $mangas = Manga::with(['chapters' => function($query) {
+                $query->latest()->limit(5);
+            }, 'chapters.links'])
+                ->latest()
+                ->paginate(10);
 
         return view('mangas.index', ['mangas' => $mangas]);
     }
@@ -37,7 +43,11 @@ class MangaController extends Controller
 
     public function show(Manga $manga)
     {
-        $manga->load('chapters');
+        $userId = Auth::id();
+
+        $manga->load(['chapters.links', 'chapters.views' => function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        }]);
 
         return view('mangas.show', ['manga' => $manga]);
     }
@@ -52,5 +62,27 @@ class MangaController extends Controller
     {
         $manga->unfollow(Auth::user());
         return redirect()->back()->with('success', 'You are no longer following this manga.');
+    }
+
+    public function logView(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'chapter_id' => 'required|integer|exists:chapters,id',
+        ]);
+
+        $chapterView = ChapterView::updateOrCreate(
+            ['user_id' => $validated['user_id'], 'chapter_id' => $validated['chapter_id']],
+            ['viewed' => true]
+        );
+
+        return response()->json(['status' => 'success', 'data' => $chapterView]);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->get('query', '');
+        $mangas = Manga::where('title', 'LIKE', '%' . $query . '%')->select('id', 'title', 'image')->limit(10)->get();
+        return response()->json($mangas);
     }
 }
