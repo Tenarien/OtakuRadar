@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookmarkController;
+use App\Http\Controllers\ValidationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MangaController;
 
@@ -10,6 +11,8 @@ Route::get('/', [MangaController::class, 'index']);
 Route::resource('mangas', MangaController::class);
 Route::resource('chapters', MangaController::class);
 
+Route::get('/search', [MangaController::class, 'search'])->name('mangas.search');
+
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -17,6 +20,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/mangas/{manga}/unfollow', [MangaController::class, 'unfollow'])->name('mangas.unfollow');
 
     Route::get('/bookmarks', [BookmarkController::class, 'bookmark'])->name('users.bookmark');
+
+    Route::post('/logview', [MangaController::class, 'logView'])->name('users.logview');
 });
 
 Route::middleware('guest')->group(function () {
