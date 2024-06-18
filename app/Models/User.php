@@ -50,4 +50,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Manga::class, 'manga_user')->withTimestamps();
     }
+
+    public function chapterViews()
+    {
+        return $this->hasMany(ChapterView::class);
+    }
 }
