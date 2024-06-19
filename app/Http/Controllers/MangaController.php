@@ -7,17 +7,26 @@ use Illuminate\Http\Request;
 use App\Models\Manga;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class MangaController extends Controller
 {
     public function index()
     {
-            $mangas = Manga::with(['chapters' => function($query) {
-                $query->latest()->limit(5);
+        $latestChapters = DB::table('chapters as c1')
+            ->select('c1.manga_id', DB::raw('MAX(c1.id) as latest_chapter_id'))
+            ->groupBy('c1.manga_id');
+
+        $mangas = Manga::select('mangas.*')
+            ->joinSub($latestChapters, 'latest_chapters', function($join) {
+                $join->on('mangas.id', '=', 'latest_chapters.manga_id');
+            })
+            ->with(['chapters' => function($query) {
+                $query->orderByDesc('id')->limit(5);
             }, 'chapters.links'])
-                ->latest()
-                ->paginate(10);
+            ->orderByDesc('latest_chapters.latest_chapter_id')
+            ->paginate(10);
 
         return view('mangas.index', ['mangas' => $mangas]);
     }
