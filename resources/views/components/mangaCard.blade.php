@@ -67,7 +67,7 @@
         </div>
     </div>
 @elseif ($bookmark)
-    <div class="mt-4 p-4 border-b overflow-hidden bg-slate-200 shadow rounded-md shadow-xl transition-transform hover:scale-[1.02] mr-2">
+    <div class="mt-4 p-4 overflow-hidden bg-slate-200 dark:bg-gray-600 rounded-md shadow-xl transition-transform hover:scale-[1.02] mr-2">
         <a href="{{ route('mangas.show', $manga) }}" class="flex flex-col md:flex-row md:items-start rounded-md space-x-0 md:space-x-4">
             <div class="flex-none w-24 h-36 overflow-hidden rounded-md shadow-lg">
                 <img class="rounded-md object-cover w-full h-full transition-transform hover:scale-105" src="{{ $manga->image }}" alt="{{ $manga->title }}">
@@ -122,7 +122,7 @@
                 <img class="rounded-md shadow-darker-xl object-cover w-full h-full" src="{{ $manga->image }}" alt="{{ $manga->title }}" loading="lazy">
             </div>
             <div class="ml-4 md:ml-4 md:mt-0 flex-1 overflow-hidden">
-                <p class="text text-lg font-bold hover:text-purple-500 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">{{ $manga->title }}</p>
+                <p class="text-lg font-bold hover:text-purple-500 dark:text-slate-200 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">{{ $manga->title }}</p>
                 <ul>
                     @foreach ($manga->chapters->sortByDesc('id')->take(5) as $chapter)
                         @php
@@ -131,12 +131,12 @@
                             $isViewed = $chapter->chapterViews->contains('user_id', $userId);
                         @endphp
                         <li class="mt-1 overflow-hidden flex items-center justify-between">
-                            <a href="#" class="iframe-link {{ $isViewed ? 'text-purple-500' : 'text-gray-500' }} text-gray-500 text-ellipsis whitespace-nowrap hover:underline flex-1"
+                            <a href="#" class="iframe-link {{ $isViewed ? 'text-purple-500' : 'text-gray-500' }} text-gray-500 dark:text-slate-100 text-ellipsis whitespace-nowrap hover:underline flex-1"
                                data-url="{{ $chapter->links->first()->url }}"
                                data-next-url="{{ $chapter->nextLinkUrl() ?? '#' }}"
                                data-previous-url="{{ $chapter->previousLinkUrl() ?? '#' }}"
                                data-chapter-id="{{ $chapter->id }}">{{ $chapter->chapter_number }}</a>
-                            <span class="ml-8 hidden sm:block text-xs text-gray-400 text-ellipsis whitespace-nowrap flex-shrink-0">{{ $chapter->created_at->diffForHumans() }}</span>
+                            <span class="ml-8 hidden sm:block text-xs text-gray-400 dark:text-gray-300 text-ellipsis whitespace-nowrap flex-shrink-0">{{ $chapter->created_at->diffForHumans() }}</span>
                         </li>
                     @endforeach
                 </ul>
