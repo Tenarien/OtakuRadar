@@ -1,5 +1,36 @@
 import './bootstrap';
 
+document.addEventListener("DOMContentLoaded", () => {
+    const sunIcon = document.getElementById('sun-icon');
+    const moonIcon = document.getElementById('moon-icon');
+
+
+    if (localStorage.getItem('darkMode') === 'enabled') {
+        document.documentElement.classList.add('dark');
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'inline';
+    } else {
+        sunIcon.style.display = 'inline';
+        moonIcon.style.display = 'none';
+    }
+
+    function toggleDarkMode() {
+        if (document.documentElement.classList.contains('dark')) {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('darkMode', 'disabled');
+            sunIcon.style.display = 'inline';
+            moonIcon.style.display = 'none';
+        } else {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('darkMode', 'enabled');
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'inline';
+        }
+    }
+
+    sunIcon.addEventListener('click', toggleDarkMode);
+    moonIcon.addEventListener('click', toggleDarkMode);
+});
 
 
 var toggleOpen = document.getElementById('toggleOpen');
