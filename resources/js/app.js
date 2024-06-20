@@ -1,15 +1,31 @@
 import './bootstrap';
 
 document.addEventListener("DOMContentLoaded", () => {
-    const sunIcon = document.getElementById('sun-icon');
-    const moonIcon = document.getElementById('moon-icon');
+    setTimeout(() =>{
+        const flashMsg = document.getElementById('flash-msg');
 
+        if(flashMsg) {
+            flashMsg.classList.add('opacity-0');
+
+            setTimeout(() => {
+                flashMsg.classList.add('hidden');
+            }, 900);
+        }
+    }, 5000);
+})
+
+document.addEventListener("DOMContentLoaded", () => {
+    const sunIcon = document.getElementById('main-sun-icon');
+    const moonIcon = document.getElementById('main-moon-icon');
+    const darkModeIcons = document.getElementById('dark-mode-icons');
 
     if (localStorage.getItem('darkMode') === 'enabled') {
         document.documentElement.classList.add('dark');
+        darkModeIcons.classList.add('lg:block');
         sunIcon.style.display = 'none';
         moonIcon.style.display = 'inline';
     } else {
+        darkModeIcons.classList.add('lg:block');
         sunIcon.style.display = 'inline';
         moonIcon.style.display = 'none';
     }
@@ -32,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     moonIcon.addEventListener('click', toggleDarkMode);
 });
 
-
+// Mobile menu
 var toggleOpen = document.getElementById('toggleOpen');
 var toggleClose = document.getElementById('toggleClose');
 var collapseMenu = document.getElementById('collapseMenu');
@@ -48,17 +64,42 @@ function handleClick() {
         main.classList.remove('blur-lg');
         logo.classList.remove('blur-lg');
     } else {
+        mobileSearchButton.classList.add('hidden');
         main.classList.add('blur-lg');
         logo.classList.add('blur-lg');
     }
 }
 
+
+const darkModeIcons = document.getElementById('dark-mode-icons');
+const darkModeIconsMobile = document.getElementById('dark-mode-icons-mobile');
+const darkModeIconsDesktop = document.getElementById('dark-mode-icons-desktop');
+function moveDarkModeIconMobile() {
+    const sunIcon = document.getElementById('main-sun-icon');
+    if(darkModeIcons && darkModeIconsMobile) {
+        sunIcon.classList.add('invert')
+        darkModeIconsMobile.appendChild(darkModeIcons);
+        darkModeIcons.classList.remove('hidden');
+    }
+}
+
+function moveDarkModeIconDesktop() {
+    if (darkModeIcons && darkModeIconsDesktop) {
+        darkModeIconsDesktop.appendChild(darkModeIcons);
+        darkModeIcons.classList.remove('hidden');
+    }
+}
+
 toggleOpen.addEventListener('click', function (event) {
     event.stopPropagation();
+    mobileSearchButton.classList.remove('hidden');
+    mobileSearchBar.classList.add('hidden')
+    moveDarkModeIconMobile();
     handleClick();
 });
 toggleClose.addEventListener('click', function (event) {
     event.stopPropagation();
+    moveDarkModeIconMobile();
     handleClick();
 });
 
@@ -69,6 +110,7 @@ document.addEventListener('click', function (event) {
         target !== toggleOpen &&
         target !== toggleClose) {
         collapseMenu.style.display = 'none';
+        mobileSearchButton.classList.remove('hidden');
         main.classList.remove('blur-lg');
         logo.classList.remove('blur-lg');
     }
@@ -76,7 +118,15 @@ document.addEventListener('click', function (event) {
 
 window.addEventListener('resize', function () {
     if (window.innerWidth >= 1024) {
+        moveDarkModeIconDesktop()
         collapseMenu.style.display = 'none';
+        mobileSearchButton.classList.remove('hidden');
+        main.classList.remove('blur-lg');
+        logo.classList.remove('blur-lg');
+        mobileSearchBar.classList.add('hidden');
+    }
+    if(window.innerWidth <= 1024) {
+        moveDarkModeIconMobile()
     }
 });
 
@@ -97,6 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', adjustMainContentMargin);
 window.addEventListener('resize', adjustMainContentMargin);
 
+// adjust header with main content
 function adjustMainContentMargin() {
     var header = document.querySelector('header');
     var main = document.querySelector('main');
@@ -228,8 +279,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (data.status === 'success') {
                     const chapterLink = document.querySelector(`a[data-chapter-id="${chapterId}"]`);
                     if (chapterLink) {
-                        chapterLink.classList.remove('text-gray-500');
-                        chapterLink.classList.add('text-purple-500');
+                        chapterLink.classList.remove('text-gray-500 dark:text-gray-100');
+                        chapterLink.classList.add('text-purple-500 dark:text-purple-400');
 
                         const newLabelSpan = chapterLink.querySelector('span#new');
                         if (newLabelSpan) {
