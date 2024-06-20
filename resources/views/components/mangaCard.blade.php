@@ -6,28 +6,28 @@
     <!-- Manga page -->
     <div>
         <div class="sm:flex mt-4 gap-4 pb-1 border-b overflow-hidden mr-2">
-            <div class="card">
+            <div class="card dark:bg-gray-700">
                 <div class="flex flex-col items-center">
                     <div class="flex-none w-32 h-44">
                         <img class="rounded-md flex-shrink-0" src="{{ $manga->image }}" width="200" height="300" alt="{{ $manga->title }}">
                     </div>
-                    <a href="{{ $manga->url }}" class="btn text-center mt-2 cursor-pointer bg-purple-800">Go to Asura Scans</a>
+                    <a href="{{ $manga->url }}" class="btn dark:border dark:border-gray-900 text-center mt-6 cursor-pointer bg-purple-800">Go to Asura Scans</a>
                 </div>
                 @auth
                     @if ($manga->isFollowedBy(auth()->user()))
                         <form action="{{ route('mangas.unfollow', $manga) }}" method="post">
                             @csrf
-                            <button class="btn mt-3 bg-red-500">Unfollow</button>
+                            <button class="btn dark:border dark:border-gray-900 mt-3 bg-red-500">Unfollow</button>
                         </form>
                     @else
                         <form action="{{ route('mangas.follow', $manga) }}" method="post">
                             @csrf
-                            <button class="btn mt-3">Get Notified</button>
+                            <button class="btn dark:border dark:border-gray-900 mt-3">Get Notified</button>
                         </form>
                     @endif
                 @endauth
             </div>
-            <div class="card mt-4 sm:mt-0 w-full overflow-hidden">
+            <div class="card dark:bg-gray-700 mt-4 sm:mt-0 w-full overflow-hidden">
                 <p class="text-sm sm:text-xl md:text-3xl font-bold overflow-hidden text-ellipsis whitespace-nowrap max-w-full">{{ $manga->title }}</p>
                 <div class="mt-4">
                     <p class="text-sm md:text-2xl text-center">Chapters</p>
@@ -37,7 +37,7 @@
                     <a class="block text-sm sm:text-md text-center  bg-slate-800 transition-colors rounded-md p-1 text-white hover:bg-slate-500">ReaperScans</a>
                     <a class="block text-sm sm:text-md text-center  bg-red-700 transition-colors rounded-md p-1 text-white hover:bg-slate-500">HiveToon</a>
                 </div>
-                <div class="card p-1 flex gap-4 mb-2">
+                <div class="card dark:bg-gray-700 p-1 font-medium flex gap-4 mb-2">
                     <a href="" data-url="{{ $manga->chapters->sortBy('id')->first()->links->first()->url }}" data-next-url="{{ $manga->chapters->sortBy('id')->first()->nextLinkUrl() ?? '#' }}" data-chapter-id="{{ $manga->chapters->sortBy('id')->first()->id }}" class="iframe-link block text-sm sm:text-xl text-center w-1/2 bg-slate-600 transition-colors rounded-md p-4 text-white hover:bg-slate-500">
                         First Chapter
                     </a>
@@ -45,7 +45,7 @@
                         Latest Chapter
                     </a>
                 </div>
-                <div class="card p-2 scrollable-div h-64 overflow-y-auto">
+                <div class="card dark:bg-gray-700 p-2 scrollable-div h-64 overflow-y-auto">
                         <ul class="list-inside space-y-2">
                             @foreach ($manga->chapters->sortByDesc('id') as $chapter)
                                 @php
@@ -54,7 +54,7 @@
                                     $isViewed = $chapter->chapterViews->contains('user_id', $userId);
                                 @endphp
                                 <li class="my-1">
-                                    <a href="" class="iframe-link {{ $isViewed ? 'text-purple-500' : 'text-gray-500' }} block w-full transition-colors text-black rounded-md p-2 hover:text-white hover:bg-blue-500"
+                                    <a href="" class="iframe-link {{ $isViewed ? 'text-purple-500 dark:text-purple-400' : 'text-gray-500 dark:text-gray-100' }} block w-full transition-colors text-black rounded-md p-2 hover:text-white hover:bg-blue-500"
                                        data-url="{{ $chapter->links->first()->url }}"
                                        data-next-url="{{ $chapter->nextLinkUrl() ?? '#' }}"
                                        data-previous-url="{{ $chapter->previousLinkUrl() ?? '#' }}"
@@ -67,7 +67,7 @@
         </div>
     </div>
 @elseif ($bookmark)
-    <div class="mt-4 p-4 overflow-hidden bg-slate-200 dark:bg-gray-600 rounded-md shadow-xl transition-transform hover:scale-[1.02] mr-2">
+    <div class="mt-4 p-4 border border-gray-400 dark:border-gray-100 overflow-hidden bg-slate-200 dark:bg-gray-600 rounded-md shadow-xl transition-transform hover:scale-[1.02] mr-2">
         <a href="{{ route('mangas.show', $manga) }}" class="flex flex-col md:flex-row md:items-start rounded-md space-x-0 md:space-x-4">
             <div class="flex-none w-24 h-36 overflow-hidden rounded-md shadow-lg">
                 <img class="rounded-md object-cover w-full h-full transition-transform hover:scale-105" src="{{ $manga->image }}" alt="{{ $manga->title }}">
@@ -97,7 +97,7 @@
                         @endphp
                         <li class="flex items-center">
                             <a href="#"
-                               class="iframe-link w-2/3 {{ $isViewed ? 'text-purple-500' : 'text-gray-500' }} text-sm hover:underline truncate"
+                               class="iframe-link w-2/3 {{ $isViewed ? 'text-purple-500 dark:text-purple-400' : 'text-gray-500 dark:text-gray-100' }} text-sm hover:underline truncate"
                                data-url="{{ $chapter->links->first()->url }}"
                                data-next-url="{{ $chapter->nextLinkUrl() ?? '#' }}"
                                data-previous-url="{{ $chapter->previousLinkUrl() ?? '#' }}"
@@ -122,7 +122,7 @@
                 <img class="rounded-md shadow-darker-xl object-cover w-full h-full" src="{{ $manga->image }}" alt="{{ $manga->title }}" loading="lazy">
             </div>
             <div class="ml-4 md:ml-4 md:mt-0 flex-1 overflow-hidden">
-                <p class="text-lg font-bold hover:text-purple-500 dark:text-slate-200 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">{{ $manga->title }}</p>
+                <p class="text-lg font-bold hover:text-purple-500 dark:hover:text-purple-500 dark:text-slate-200 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">{{ $manga->title }}</p>
                 <ul>
                     @foreach ($manga->chapters->sortByDesc('id')->take(5) as $chapter)
                         @php
@@ -131,7 +131,7 @@
                             $isViewed = $chapter->chapterViews->contains('user_id', $userId);
                         @endphp
                         <li class="mt-1 overflow-hidden flex items-center justify-between">
-                            <a href="#" class="iframe-link {{ $isViewed ? 'text-purple-500' : 'text-gray-500' }} text-gray-500 dark:text-slate-100 text-ellipsis whitespace-nowrap hover:underline flex-1"
+                            <a href="#" class="iframe-link {{ $isViewed ? 'text-purple-500 dark:text-purple-400' : 'text-gray-500 dark:text-gray-100' }} text-gray-500 dark:text-slate-100 text-ellipsis whitespace-nowrap hover:underline flex-1"
                                data-url="{{ $chapter->links->first()->url }}"
                                data-next-url="{{ $chapter->nextLinkUrl() ?? '#' }}"
                                data-previous-url="{{ $chapter->previousLinkUrl() ?? '#' }}"

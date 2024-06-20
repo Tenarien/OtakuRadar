@@ -57,6 +57,9 @@
                         </form>
                     </li>
                 @endauth
+                <div id="dark-mode-icons-mobile">
+
+                </div>
             </ul>
         </nav>
 
@@ -66,13 +69,13 @@
         <a href="{{ route('users.bookmark') }}" class="text-gray-500 hover:text-blue-500 dark:text-gray-100 dark:hover:text-blue-400">Bookmarks</a>
         <a href="javascript:void(0)" class="text-gray-500 hover:text-blue-500 dark:text-gray-100 dark:hover:text-blue-400">Manga</a>
         <a href="javascript:void(0)" class="text-gray-500 hover:text-blue-500 dark:text-gray-100 dark:hover:text-blue-400">Anime</a>
-        <a href="#" class="text-gray-500 hover:text-blue-500 dark:text-gray-100 dark:hover:text-blue-400">Surprise me</a>
+        <a href="{{ route('mangas.random') }}" class="text-gray-500 hover:text-blue-500 dark:text-gray-100 dark:hover:text-blue-400">Surprise me</a>
     </nav>
 
-    <!-- Mobile Search Button -->
-    <div class="flex gap-4">
-        <div class="flex justify-center items-center">
-            <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 fill-current">
+    <!-- Dark mode icon -->
+    <div id="dark-mode-icons-desktop">
+        <div id="dark-mode-icons" class="hidden justify-center items-center">
+            <svg id="main-sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 fill-current">
                 <circle cx="12" cy="12" r="5" fill="currentColor"/>
                 <g stroke="currentColor" stroke-width="2">
                     <line x1="12" y1="1" x2="12" y2="4"/>
@@ -85,10 +88,16 @@
                     <line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/>
                 </g>
             </svg>
-            <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 fill-current">
+            <svg id="main-moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 fill-current">
                 <path d="M21.752 15.002a9.05 9.05 0 0 1-10.75-10.75A7.002 7.002 0 1 0 21.752 15.002z" fill="currentColor"/>
             </svg>
         </div>
+    </div>
+
+
+
+    <!-- Mobile Search Button -->
+    <div class="flex gap-4">
         <button id="toggleOpen" class="lg:hidden">
             <svg class="w-7 h-7 fill-black dark:fill-slate-300" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd"
@@ -108,27 +117,7 @@
 
 
     <!-- Search Bar for larger screens -->
-
-
     <div id="searchBarContainer" class="hidden lg:flex gap-6 w-full lg:w-auto lg:ml-4 items-center">
-        <div>
-            <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 fill-current">
-                <circle cx="12" cy="12" r="5" fill="currentColor"/>
-                <g stroke="currentColor" stroke-width="2">
-                    <line x1="12" y1="1" x2="12" y2="4"/>
-                    <line x1="12" y1="20" x2="12" y2="23"/>
-                    <line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/>
-                    <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/>
-                    <line x1="1" y1="12" x2="4" y2="12"/>
-                    <line x1="20" y1="12" x2="23" y2="12"/>
-                    <line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/>
-                    <line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/>
-                </g>
-            </svg>
-            <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 fill-current">
-                <path d="M21.752 15.002a9.05 9.05 0 0 1-10.75-10.75A7.002 7.002 0 1 0 21.752 15.002z" fill="currentColor"/>
-            </svg>
-        </div>
         <div class="flex px-4 py-2 bg-gray-100 rounded focus-within:outline-blue-500 dark:bg-gray-600">
             <input type="text" class="searchInput w-full text-sm bg-transparent outline-none  dark:text-slate-100" placeholder="Search for something...">
             <svg class="w-5 h-5 fill-gray-400 cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904">
@@ -149,12 +138,12 @@
 
     <!-- Hidden Mobile Search Bar -->
     <div id="mobileSearchBar" class=" hidden shadow-darker-xl rounded-full fixed inset-x-0 mx-4 mt-48 bg-white z-50">
-        <div class="flex shadow-lg px-4 gap-4 py-2 bg-gray-100 rounded-full focus-within:outline-blue-500 relative">
-            <input type="text" placeholder="Search something..." class="searchInput w-full text-sm bg-transparent outline-none">
+        <div class="flex shadow-lg px-4 gap-4 py-2 bg-gray-100 rounded-full dark:bg-gray-500 dark:text-slate-100 focus-within:outline-blue-500 relative">
+            <input type="text" placeholder="Search something..." class="searchInput dark:text-slate-100 w-full text-sm bg-transparent outline-none">
             <svg class="w-5 h-5 fill-gray-400 cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904">
                 <path d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"></path>
             </svg>
-            <div class="searchResults absolute rounded-xl shadow-darker-xl top-9 left-0 right-0 bg-slate-50 border mt-1 opacity-0 max-h-0 overflow-hidden transition-all duration-500 ease-in-out"></div>
+            <div class="searchResults absolute dark:bg-gray-600 rounded-xl shadow-darker-xl top-9 left-0 right-0 bg-slate-50 border mt-1 opacity-0 max-h-0 overflow-hidden transition-all duration-500 ease-in-out"></div>
         </div>
     </div>
 </header>
