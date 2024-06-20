@@ -94,4 +94,15 @@ class MangaController extends Controller
         $mangas = Manga::where('title', 'LIKE', '%' . $query . '%')->select('id', 'title', 'image')->limit(10)->get();
         return response()->json($mangas);
     }
+
+    public function random()
+    {
+        $random = Manga::inRandomOrder()->first();
+
+        if ($random) {
+            return redirect()->route('mangas.show', ['manga' => $random->id]);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Something went wrong.']);
+        }
+    }
 }

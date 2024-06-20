@@ -13,6 +13,8 @@ Route::resource('chapters', MangaController::class);
 
 Route::get('/search', [MangaController::class, 'search'])->name('mangas.search');
 
+Route::get('/random', [MangaController::class, 'random'])->name('mangas.random');
+
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
