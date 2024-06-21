@@ -16,6 +16,7 @@ class Manga extends Model
         'title',
         'image',
         'url',
+        'source_website',
     ];
 
     public function chapters(): HasMany
